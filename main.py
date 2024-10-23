@@ -64,7 +64,22 @@ def save_password():
                 website_entry.delete(0,END)
                 password_entry.delete(0,END)
 
+# ---------------------------- LOOK UP PASSWORD ------------------------------- #
+def search_pw():
+    key = website_entry.get()
+    try:
+        with open("passwords.json","r") as f:
+            data = json.load(f)
+            try:
+                messagebox.showinfo(f"{key}", f"E-mail: {data[key]["e-mail"]}\nPassword: {data[key]["password"]}")
 
+            except KeyError:
+                messagebox.showinfo("No Match","There is no password for the searched website, yet.")
+    except FileNotFoundError:
+        messagebox.showinfo("No File","There is no password file, yet.")
+
+    except JSONDecodeError:
+        messagebox.showinfo("No File", "There is no password stored, yet.")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -108,6 +123,8 @@ generate_button.grid(row = 3, column = 2, sticky= "W")
 add_button = Button(text="Add", width=36, command= save_password)
 add_button.grid(row = 4, column = 1, columnspan = 2, sticky= "W")
 
+search_button = Button(text = "Search", command=search_pw)
+search_button.grid(row = 1, column = 2, sticky= "W")
 
 
 
