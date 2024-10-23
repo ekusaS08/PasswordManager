@@ -16,7 +16,7 @@ def generate_pw():
     number_list = [choice(numbers) for _ in range(0, randint(2,4))]
     # combine into a password_list
     password_list = letter_list + symbol_list + number_list
-    # gives the netries a random order (so you don´t get all letters first, etc)
+    # gives the entries a random order (so you don´t get all letters first, etc)
     shuffle(password_list)
     # turn password_list into string
     password = "".join(password_list)
