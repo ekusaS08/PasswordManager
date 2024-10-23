@@ -1,8 +1,9 @@
+from json import JSONDecodeError
 from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
 import pyperclip
-
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 #Is called on "Generate Password"-button click
 def generate_pw():
@@ -16,7 +17,7 @@ def generate_pw():
     number_list = [choice(numbers) for _ in range(0, randint(2,4))]
     # combine into a password_list
     password_list = letter_list + symbol_list + number_list
-    # gives the entries a random order (so you don´t get all letters first, etc)
+    # gives the entries a random order (so you don´t get all letters first, etc.)
     shuffle(password_list)
     # turn password_list into string
     password = "".join(password_list)
@@ -35,6 +36,8 @@ def save_password():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_data ={website: {"e-mail": email, "password":password}}
+
     #check if entry is empty
     if not len(password) or not len(email) or not len(website):
         messagebox.showinfo(title="Empty Fields", message="Don´t leave any fields empty")
@@ -44,14 +47,22 @@ def save_password():
                                                              f"\nPassword: {password}\nDo you want to save?")
 
         if is_okay :
-            #save info to the .txt
-            with open("passwords.txt", "a") as f:
-                f.write(f"{website} | {email} | {password} \n")
-            #show confirmation
-            messagebox.showinfo(title="Password Saved", message="Password Saved")
-            #clear password and website entry
-            website_entry.delete(0,END)
-            password_entry.delete(0,END)
+            try:
+                with open("passwords.json", "r") as f:
+                    data = json.load(f)
+                    data.update(new_data)
+            except (FileNotFoundError, JSONDecodeError):
+                with open("passwords.json", "w") as f:
+                    json.dump(new_data, f, indent = 4)
+            else:
+                with open("passwords.json", "w") as f:
+                    json.dump(data, f, indent = 4)
+            finally:
+                #show confirmation
+                messagebox.showinfo(title="Password Saved", message="Password Saved")
+                #clear password and website entry
+                website_entry.delete(0,END)
+                password_entry.delete(0,END)
 
 
 
