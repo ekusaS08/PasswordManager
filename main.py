@@ -70,10 +70,9 @@ def search_pw():
     try:
         with open("passwords.json","r") as f:
             data = json.load(f)
-            try:
+            if key in data:
                 messagebox.showinfo(f"{key}", f"E-mail: {data[key]["e-mail"]}\nPassword: {data[key]["password"]}")
-
-            except KeyError:
+            else:
                 messagebox.showinfo("No Match","There is no password for the searched website, yet.")
     except FileNotFoundError:
         messagebox.showinfo("No File","There is no password file, yet.")
@@ -104,7 +103,7 @@ password_label.grid(row = 3, column=0)
 
 ##### ENTRIES
 website_entry = Entry(width=35)
-website_entry.grid(row = 1, column = 1, columnspan=2, sticky= "W")
+website_entry.grid(row = 1, column = 1, sticky= "W")
 website_entry.focus() #put the cursor into the website entry
 
 email_entry = Entry(width=35)
